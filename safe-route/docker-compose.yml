@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: saferoute-postgres
+    environment:
+      POSTGRES_DB: saferoute
+      POSTGRES_USER: saferoute
+      POSTGRES_PASSWORD: saferoute_dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - saferoute_postgres_data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saferoute -d saferoute"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    profiles: ["app"]
+    build:
+      context: ./web
+    env_file:
+      - ./web/.env.local
+    environment:
+      DATABASE_URL: postgresql://saferoute:saferoute_dev@postgres:5432/saferoute
+      GEMMA_MODEL: ${GEMMA_MODEL:-gemma-4-26b-a4b-it}
+      GEMMA_TIMEOUT_MS: ${GEMMA_TIMEOUT_MS:-8000}
+      DEMO_SESSION_ID: ${DEMO_SESSION_ID:-sess-demo-001}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  saferoute_postgres_data:

@@ -1,0 +1,74 @@
+
+> safe-route-web@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 5824, using available port 3001 instead.
+▲ Next.js 16.4.3 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://172.31.240.1:3001
+✓ Ready in 876ms
+⚠ Warning: Next.js ignored package-lock.json in C:\Users\Lenovo because it would include your home directory (C:\Users\Lenovo).
+ To use this directory, set `turbopack.root` in your Next.js config.
+
+✓ Running next.config.ts took 60ms
+
+✓ Generated AGENTS.md for AI agents. Set `agentRules: false` in next.config to disable.
+⨯ error: ���������� "saferoute" �� ������� �������������� �� ��������� ������
+    at async seedDemo (src\demo-bootstrap\seed-demo.ts:7:18)
+    at async POST (src\app\api\demo\reset\route.ts:5:3)
+   5 |
+   6 | export async function seedDemo() {
+>  7 |   const client = await db.connect();
+     |                  ^
+   8 |   try {
+   9 |     await client.query("BEGIN");
+  10 |     await client.query("TRUNCATE audit_entries, reservations, disruption_events, passenger_sessions, recovery_options, recovery_cases, bookings, country_profiles CASCADE"); {
+  length: 125,
+  severity: '��������',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+ POST /api/demo/reset 500 in 390ms (next.js: 90ms, application-code: 300ms)
+⨯ error: ���������� "saferoute" �� ������� �������������� �� ��������� ������
+    at async holdSeat (src\reservation-actions\hold-seat.ts:7:18)
+    at async POST (src\app\api\cases\[caseId]\hold\route.ts:8:18)
+   5 |
+   6 | export async function holdSeat(input: { caseId: string; sessionId?: string; optionId: string; idempotencyKey: string }): Promise<HoldResult> {
+>  7 |   const client = await db.connect();
+     |                  ^
+   8 |   try {
+   9 |     await client.query("BEGIN");
+  10 |     const existing = await client.query("SELECT reservation_id,expires_at FROM reservations WHERE idempotency_key=$1", [input.idempotencyKey]); {
+  length: 125,
+  severity: '��������',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '320',
+  routine: 'auth_failed'
+}
+ POST /api/cases/case-1001/hold 500 in 1010ms (next.js: 807ms, application-code: 203ms)
+[?25h
