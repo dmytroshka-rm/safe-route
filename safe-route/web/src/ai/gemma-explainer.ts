@@ -28,7 +28,7 @@ export async function interpretPassengerNeed(input: InterpretationInput): Promis
       method: "POST",
       headers: { "content-type": "application/json" },
       signal: AbortSignal.timeout(30000),
-      body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { temperature: 0, responseMimeType: "application/json", maxOutputTokens: 700 } })
+      body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { temperature: 0, responseMimeType: "application/json", maxOutputTokens: 2048 } })
     });
     if (!response.ok) return { proposal: unavailableReply(), provider: "policy" };
     const payload = await response.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string; thought?: boolean }> } }> };

@@ -17,7 +17,7 @@ export async function buildOperatorBrief(input: BriefInput): Promise<{ text: str
   if (!apiKey) return { text: policyBrief(input), provider: "policy" };
   const prompt = `Use only CASE_FACTS. Write one concise Ukrainian operator note, maximum 40 words: event, passenger constraint if present, and next safe action. Do not claim a booking changed and do not invent facts. CASE_FACTS=${JSON.stringify(input)}`;
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, { method: "POST", headers: { "content-type": "application/json" }, signal: AbortSignal.timeout(30000), body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { temperature: 0.1, maxOutputTokens: 1600 } }) });
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, { method: "POST", headers: { "content-type": "application/json" }, signal: AbortSignal.timeout(30000), body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { temperature: 0.1, maxOutputTokens: 2048 } }) });
     if (!response.ok) return { text: policyBrief(input), provider: "policy" };
     const payload = await response.json() as { candidates?: Array<{ content?: { parts?: Array<{ text?: string; thought?: boolean }> } }> };
     const text = payload.candidates?.[0]?.content?.parts?.find((part) => !part.thought && part.text)?.text?.trim();
