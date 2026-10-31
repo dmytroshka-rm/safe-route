@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { DEMO_CASE_ID, DEMO_OPERATOR_SESSION_ID, seedDemo } from "@/demo-bootstrap/seed-demo";
+import { ensureSchema } from "@/platform/database";
 
 export async function POST() {
+  await ensureSchema();
   await seedDemo();
   const response = NextResponse.json({ caseId: DEMO_CASE_ID });
   response.cookies.set("saferoute_session", "sess-demo-001", { httpOnly: true, sameSite: "lax", path: "/" });

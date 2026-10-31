@@ -1,0 +1,27 @@
+databases:
+  - name: saferoute-db
+    plan: free
+    databaseName: saferoute
+    user: saferoute
+    ipAllowList: []
+
+services:
+  - type: web
+    name: saferoute
+    plan: free
+    runtime: docker
+    dockerfilePath: ./safe-route/web/Dockerfile
+    dockerContext: ./safe-route/web
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: saferoute-db
+          property: connectionString
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMMA_MODEL
+        value: gemma-4-26b-a4b-it
+      - key: GEMMA_TIMEOUT_MS
+        value: "8000"
+      - key: DEMO_SESSION_ID
+        value: sess-demo-001
